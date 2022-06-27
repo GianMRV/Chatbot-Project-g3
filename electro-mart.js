@@ -5,7 +5,7 @@ const { axios, translate, bot, ENDPOINT_ALT, ENDPOINT } = require("./settings");
 let { lang, BUTTONS } = require("./settings");
 let { translateMessage, translateBtn, log } = require("./utils/utils");
 let getCollection = require("./functions/getProductos/getProductos");
-
+const guardarDatos = require("./functions/usuarios/registrar");
 
 // START MENU
 
@@ -101,11 +101,6 @@ bot.on('ask.id', msg => {
 );
 
 
-
-// PAYMENT METHODS
-
-
-
 // DELIVERY METHODS
 
 bot.on('/info', (msg) => {
@@ -155,6 +150,20 @@ bot.on('/opciones', (msg) => {
 
 
 });
+
+bot.on('/registrar', (msg) => {
+
+    return translateMessage(msg, lang, `Para registrarse ingrese los datos necesarios en el siguiente orden \n
+    correo, nombre, apellido, ciudad`, false, 'datos');
+})
+
+bot.on('ask.datos', msg => {
+    const datos = String(msg.text);
+    //aqui iria un  yup
+  guardarDatos(datos, msg.from.id);
+  return translateMessage(msg, lang, 'Sus datos han sido registrados correctamente')
+})
+
 
 
 
