@@ -20,7 +20,7 @@ let BUTTONS = {};
 let keys = ["products", "payment", "delivery", "buscar", "close", 
             "carrito", "buscarOtro", "verCarrito", "language", "switch"];
 
-let labels = ["Lista de productos", "Métodos de pago", "Métodos de entrega", "Elegir producto", "Cerrar",
+let labels = ["Lista de productos", "Métodos de pago", "Métodos de entrega", "Elegir producto", "Volver al menu inicial",
               "Agregar al carrito", "Elegir otro producto", "Ver carrito", "Cambiar idioma", "/restart"];
 
 let commands = ["/products", "/pay", "/deliver", "/buscar", "/start",
@@ -34,7 +34,7 @@ for (; idx < keysLen ; idx++) {
 // BOT SETTINGS
 
 const bot = new Telebot({
-    token: '5388284212:AAHmEF3VaQ12caV7U1QhDwXD1jT19yEsqZw',
+    token: '5573269354:AAGYsm48IfrPZal9EnhfMJ6qiM2hMVnPcLI',
     usePlugins: ['namedButtons', 'askUser'],
     pluginConfig: {
         namedButtons: {
@@ -43,5 +43,5 @@ const bot = new Telebot({
     }
 });
 
-module.exports = { axios, translate, Telebot, bot, ENDPOINT_ALT, lang, 
-                   BUTTONS, keys, labels, commands };
+module.exports = { axios, translate, Telebot, bot, ENDPOINT, lang, 
+                   BUTTONS, keys, labels, commands, ENDPOINT_ALT};
