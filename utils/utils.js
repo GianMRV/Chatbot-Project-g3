@@ -1,7 +1,7 @@
 // DEPENDENCIES
 
-const { translate, bot } = require('./settings');
-let { lang, keys, labels, BUTTONS } = require('./settings');
+const { translate, bot } = require('../settings');
+let { lang, keys, labels, BUTTONS } = require('../settings');
 
 // BOT LANGUAGE
 
@@ -51,6 +51,15 @@ function translateBtn (lang) {
     })
     .catch(err => console.error(err));
 }
-// translateBtn();
 
-module.exports = { translateMessage, translateBtn };
+let log = console.log;
+
+let output = content => ({
+    statusCode: 200,
+    body: JSON.stringify(content)
+});
+
+
+
+
+module.exports = { translateMessage, translateBtn, log, output };

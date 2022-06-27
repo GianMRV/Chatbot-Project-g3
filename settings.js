@@ -3,6 +3,8 @@
 const Telebot = require('telebot');
 const axios = require('axios');
 const translate = require('translate-google');
+let connectDB = require('../chat-bot/functions/connectDB/connectDB');
+
 
 // ENDPOINTS
 
@@ -44,4 +46,4 @@ const bot = new Telebot({
 });
 
 module.exports = { axios, translate, Telebot, bot, ENDPOINT, lang, 
-                   BUTTONS, keys, labels, commands, ENDPOINT_ALT};
+                   BUTTONS, keys, labels, commands, ENDPOINT_ALT, connectDB};

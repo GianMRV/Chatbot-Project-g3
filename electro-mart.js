@@ -1,8 +1,11 @@
 //  DEPENDENCIES
 
+
 const { axios, translate, bot, ENDPOINT_ALT, ENDPOINT } = require("./settings");
 let { lang, BUTTONS } = require("./settings");
-let { translateMessage, translateBtn } = require("./utils");
+let { translateMessage, translateBtn, log } = require("./utils/utils");
+var getCollection = require(".functions/getProducts/getProducts");
+var saveData = require("./functions/users/register");
 
 // START MENU
 
@@ -27,14 +30,11 @@ bot.on('/products', (msg) => {
 
     async function getProducts() {
         try {
-            const response = await axios.get(ENDPOINT_ALT);
-            let productos = response.data;
-
-            let resultado = `id  |  Nombre                           |  Precio\n`;
+            const response = await getCollection('Productos', {});
+            translateMessage(msg, lang,`id  |  Nombre                           |  Precio\n`)
             let len = productos.length;
-            let i = 0;
-            for (; i < len; i++) {
-                resultado += `${productos[i].id}  | ${productos[i].title.substring(0, 20)} | $${productos[i].price} \n`;
+            for (let i = 0; i < len; i++) {
+                resultado = `${productos[i].id}  | ${productos[i].title.substring(0, 20)} | $${productos[i].price} \n`;
             }
             return bot.sendMessage(msg.chat.id, ` ${resultado}`);
 
@@ -73,12 +73,12 @@ bot.on('ask.id', msg => {
     async function getProductID(id) {
 
 
-        const response = await axios.get(ENDPOINT_ALT + `/${id}`);
+        const response = await getCollection('Productos', {id: id});
         let producto = response.data;
-        let resultado = `id: ${producto.id}\n Nombre: ${producto.title}\n 
-                    Precio: $${producto.price} \n Descripcion: \n ${producto.description} \n ${producto.image} \n
-                    Categoria: ${producto.category}\n
-                    Valoracion: promedio ${producto.rating.rate} de ${producto.rating.count} valoraciones \n`;
+        let resultado = `id: ${producto[0].id}\n Nombre: ${producto[0].title}\n 
+        Precio: $${producto[0].price} \n Descripcion: \n ${producto[0].description} \n ${producto[0].image} \n
+        Categoria: ${producto[0].category}\n
+        Valoracion: promedio ${producto[0].rating.rate} de ${producto[0].rating.count} valoraciones \n`;
 
         bot.sendMessage(msg.chat.id, `${resultado}`);
     }
