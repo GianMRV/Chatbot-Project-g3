@@ -4,8 +4,8 @@
 const { axios, translate, bot, ENDPOINT_ALT, ENDPOINT } = require("./settings");
 let { lang, BUTTONS } = require("./settings");
 let { translateMessage, translateBtn, log } = require("./utils/utils");
-var getCollection = require(".functions/getProducts/getProducts");
-var saveData = require("./functions/users/register");
+let getCollection = require("./functions/getProductos/getProductos");
+
 
 // START MENU
 
@@ -14,8 +14,8 @@ bot.on('/start', (msg) => {
     let userName = String(msg.chat.first_name);
 
     let replyMarkup = bot.keyboard([
-        [BUTTONS.products.label, BUTTONS.payment.label],
-        [BUTTONS.delivery.label, BUTTONS.language.label]
+        [BUTTONS.products.label, BUTTONS.carrito.label],
+        [BUTTONS.info.label, BUTTONS.opciones.label]
     ], { resize: true });
 
     let text = `¡Es hora de empezar 🤖!\n\n¿Cómo puedo ayudarte?`
@@ -30,11 +30,11 @@ bot.on('/products', (msg) => {
 
     async function getProducts() {
         try {
-            const response = await getCollection('Productos', {});
-            translateMessage(msg, lang,`id  |  Nombre                           |  Precio\n`)
-            let len = productos.length;
+            let producto = await getCollection('Productos', {});
+            let resultado=`id  |  Nombre                           |  Precio\n`;
+            let len = producto.length;
             for (let i = 0; i < len; i++) {
-                resultado = `${productos[i].id}  | ${productos[i].title.substring(0, 20)} | $${productos[i].price} \n`;
+                resultado+= `${producto[i].id}  | ${producto[i].name.substring(0, 20)} | $${producto[i].price} \n`;
             }
             return bot.sendMessage(msg.chat.id, ` ${resultado}`);
 
@@ -73,9 +73,8 @@ bot.on('ask.id', msg => {
     async function getProductID(id) {
 
 
-        const response = await getCollection('Productos', {id: id});
-        let producto = response.data;
-        let resultado = `id: ${producto[0].id}\n Nombre: ${producto[0].title}\n 
+        const producto = await getCollection('Productos', {id: id});
+        let resultado = `id: ${producto[0].id}\n Nombre: ${producto[0].name}\n 
         Precio: $${producto[0].price} \n Descripcion: \n ${producto[0].description} \n ${producto[0].image} \n
         Categoria: ${producto[0].category}\n
         Valoracion: promedio ${producto[0].rating.rate} de ${producto[0].rating.count} valoraciones \n`;
@@ -105,9 +104,14 @@ bot.on('ask.id', msg => {
 
 // PAYMENT METHODS
 
-bot.on('/pay', (msg) => {
 
-    let text = `Los metodos de pago son: \n
+
+// DELIVERY METHODS
+
+bot.on('/info', (msg) => {
+
+    //SE ENVIA UN STICKER QUE DIGA MÉTODOS DE PAGO
+    translateMessage(msg, lang, `Los metodos de pago son: \n
     - Efectivo 
 
     - Transferencia 
@@ -115,16 +119,9 @@ bot.on('/pay', (msg) => {
     - Criptomonedas recibidas:
         *BTC
         *ETH
-        *USTD`
+        *USTD`);
 
-    return translateMessage(msg, lang, text);
-});
-
-// DELIVERY METHODS
-
-bot.on('/deliver', (msg) => {
-
-    bot.sendMessage(msg.from.id, '* función en desarrollo *');
+    
 
 });
 
@@ -146,6 +143,20 @@ bot.on('/lang', (msg) => {
 
 
 });
+
+
+bot.on('/opciones', (msg) => {
+
+    let replyMarkup = bot.keyboard([
+        [BUTTONS.modify.label, BUTTONS.language.label],
+        [BUTTONS.close.label]
+    ], { resize: true });
+   translateMessage(msg, lang, 'Presione la opción deseada: ⌨️', replyMarkup);
+
+
+});
+
+
 
 // START POLLING UPDATES
 

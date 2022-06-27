@@ -1,6 +1,6 @@
-let {log} = require('../../utils/utlis');
+let {log} = require('../../utils/utils');
 let connectDB = require('../connectDB/connectDB');
-const TeleBot = require('telebot')
+
 
 
 

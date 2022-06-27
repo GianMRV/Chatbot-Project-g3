@@ -3,7 +3,7 @@
 const Telebot = require('telebot');
 const axios = require('axios');
 const translate = require('translate-google');
-let connectDB = require('../chat-bot/functions/connectDB/connectDB');
+let connectDB = require('./functions/connectDB/connectDB');
 
 
 // ENDPOINTS
@@ -19,14 +19,14 @@ let lang = 'es';
 
 let BUTTONS = {};
 
-let keys = ["products", "payment", "delivery", "buscar", "close", 
-            "carrito", "buscarOtro", "verCarrito", "language", "switch"];
+let keys = ["products", "carrito", "info", "buscar", "close", 
+            "notUSED", "buscarOtro", "verCarrito", "language", "opciones", "pago", "modify",  "switch"];
 
-let labels = ["Lista de productos", "Métodos de pago", "Métodos de entrega", "Elegir producto", "Volver al menu inicial",
-              "Agregar al carrito", "Elegir otro producto", "Ver carrito", "Cambiar idioma", "/restart"];
+let labels = ["Lista de productos", "Carrito de Compra", "Sobre nosotros", "Elegir producto", "Volver al menu inicial",
+              "sinUSAR", "Elegir otro producto", "Ver carrito", "Cambiar idioma", "Configuraciones", "Métodos de Pago", "Modificar Correo Asociado", "/restart"];
 
-let commands = ["/products", "/pay", "/deliver", "/buscar", "/start",
-                "/carrito", "/buscar", "/verCarrito", "/lang", "/start"];
+let commands = ["/products", "/carrito", "/info", "/buscar", "/start",
+                "/sinUSAR", "/buscar", "/verCarrito", "/lang", "/opciones", "/pay", "/modify",  "/start"];
 
 let idx = 0, keysLen = keys.length;
 for (; idx < keysLen ; idx++) {

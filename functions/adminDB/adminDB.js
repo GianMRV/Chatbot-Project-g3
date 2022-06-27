@@ -1,7 +1,7 @@
 
 let axios = require('axios');
 
-let {log, output} = require('../../utils/utlis');
+let {log, output} = require('../../utils/utils');
 let connectDB = require('../connectDB/connectDB');
 
 const ENDPOINT = 'https://fakestoreapi.com/products/';
