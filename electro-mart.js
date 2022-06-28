@@ -6,21 +6,42 @@ let { lang, BUTTONS } = require("./settings");
 let { translateMessage, translateBtn, log } = require("./utils/utils");
 let getCollection = require("./functions/getProductos/getProductos");
 const guardarDatos = require("./functions/usuarios/registrar");
-
+const encontrarUsuario = require("./functions/usuarios/encontrar");
 // START MENU
 
 bot.on('/start', (msg) => {
 
-    let userName = String(msg.chat.first_name);
 
-    let replyMarkup = bot.keyboard([
-        [BUTTONS.products.label, BUTTONS.carrito.label],
-        [BUTTONS.info.label, BUTTONS.opciones.label]
-    ], { resize: true });
+    async function verificando() {
 
-    let text = `¡Es hora de empezar 🤖!\n\n¿Cómo puedo ayudarte?`
+        let verificador = await encontrarUsuario(msg.from.id);
 
-    return translateMessage(msg, lang, text, replyMarkup);
+        console.log(verificador);
+
+        if (verificador == 0) {
+            let replyMarkup = bot.keyboard([[BUTTONS.registrar.label]]);
+            return translateMessage(msg, lang, ' Bienvenido al bot! Favor registrate presionando en el botón y siguiendo los pasos indicados:', replyMarkup);
+
+        } else {
+
+            let userName = String(msg.chat.first_name);
+            let replyMarkup = bot.keyboard([
+                [BUTTONS.products.label, BUTTONS.carrito.label],
+                [BUTTONS.info.label, BUTTONS.opciones.label]
+            ], { resize: true });
+
+            let text = `¡Es hora de empezar 🤖!\n\n¿Cómo puedo ayudarte?`
+
+            return translateMessage(msg, lang, text, replyMarkup);
+
+        }
+
+        
+    }
+
+    verificando();
+
+
 
 });
 
@@ -31,10 +52,10 @@ bot.on('/products', (msg) => {
     async function getProducts() {
         try {
             let producto = await getCollection('Productos', {});
-            let resultado=`id  |  Nombre                           |  Precio\n`;
+            let resultado = `id  |  Nombre                           |  Precio\n`;
             let len = producto.length;
             for (let i = 0; i < len; i++) {
-                resultado+= `${producto[i].id}  | ${producto[i].name.substring(0, 20)} | $${producto[i].price} \n`;
+                resultado += `${producto[i].id}  | ${producto[i].name.substring(0, 20)} | $${producto[i].price} \n`;
             }
             return bot.sendMessage(msg.chat.id, ` ${resultado}`);
 
@@ -73,7 +94,7 @@ bot.on('ask.id', msg => {
     async function getProductID(id) {
 
 
-        const producto = await getCollection('Productos', {id: id});
+        const producto = await getCollection('Productos', { id: id });
         let resultado = `id: ${producto[0].id}\n Nombre: ${producto[0].name}\n 
         Precio: $${producto[0].price} \n Descripcion: \n ${producto[0].description} \n ${producto[0].image} \n
         Categoria: ${producto[0].category}\n
@@ -116,7 +137,7 @@ bot.on('/info', (msg) => {
         *ETH
         *USTD`);
 
-    
+
 
 });
 
@@ -139,29 +160,44 @@ bot.on('/lang', (msg) => {
 
 });
 
-
+// BOT OPTIONS
 bot.on('/opciones', (msg) => {
 
     let replyMarkup = bot.keyboard([
         [BUTTONS.modify.label, BUTTONS.language.label],
         [BUTTONS.close.label]
     ], { resize: true });
-   translateMessage(msg, lang, 'Presione la opción deseada: ⌨️', replyMarkup);
+    translateMessage(msg, lang, 'Presione la opción deseada: ⌨️', replyMarkup);
 
 
 });
 
 bot.on('/registrar', (msg) => {
 
-    return translateMessage(msg, lang, `Para registrarse ingrese los datos necesarios en el siguiente orden \n
+    translateMessage(msg, lang, `Para registrarse ingrese los datos necesarios en el siguiente orden \n
     correo, nombre, apellido, ciudad`, false, 'datos');
+
+
 })
 
 bot.on('ask.datos', msg => {
+    let replyMarkup = bot.keyboard([[BUTTONS.switch.label]], { resize: true });
+    
     const datos = String(msg.text);
     //aqui iria un  yup
-  guardarDatos(datos, msg.from.id);
-  return translateMessage(msg, lang, 'Sus datos han sido registrados correctamente')
+    guardarDatos(datos, msg.from.id);
+    return translateMessage(msg, lang, 'Sus datos han sido registrados correctamente', replyMarkup)
+})
+
+bot.on('/carrito', (msg) => {
+
+    let replyMarkup = bot.keyboard([
+        [BUTTONS.verCarrito.label, BUTTONS.modCarrito.label],
+        [BUTTONS.deleteCarrito.label, BUTTONS.close.label]
+    ], { resize: true });
+
+    return translateMessage(msg, lang, 'OPCIONES CARRITO', replyMarkup)
+
 })
 
 

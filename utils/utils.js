@@ -7,7 +7,7 @@ let { lang, keys, labels, BUTTONS } = require('../settings');
 
 function translateMessage (msg, lang, text, replyMarkup, id) {
    
-    if(!replyMarkup || replyMarkup==false){
+    if(!replyMarkup){
          if (!id){ 
             console.log('si');
             translate(text, {to: lang}).then(res => {

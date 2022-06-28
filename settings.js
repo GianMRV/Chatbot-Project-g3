@@ -20,15 +20,20 @@ let lang = 'es';
 let BUTTONS = {};
 
 let keys = ["products", "carrito", "info", "buscar", "close", 
-            "registrar", "buscarOtro", "verCarrito", "language", "opciones", "pago", "modify",  "switch"];
+            "registrar", "buscarOtro", "verCarrito", "language", "opciones", "pago", "modify",
+            "deleteCarrito", "modCarrito", "switch"];
 
 let labels = ["Lista de productos", "Carrito de Compra", "Sobre nosotros", "Elegir producto", "Volver al menu inicial",
-              "Crear usuario", "Elegir otro producto", "Ver carrito", "Cambiar idioma", "Configuraciones", "Métodos de Pago", "Modificar Correo Asociado", "/restart"];
+              "Crear usuario", "Elegir otro producto", "Ver Carrito de Compra", "Cambiar idioma", "Configuraciones", "Métodos de Pago", "Modificar Correo Asociado",
+               "Vaciar Carrito", "Modificar Carrito","/restart"];
+              
 
 let commands = ["/products", "/carrito", "/info", "/buscar", "/start",
-                "/registrar", "/buscar", "/verCarrito", "/lang", "/opciones", "/pay", "/modify",  "/start"];
+                "/registrar", "/buscar", "/verCarrito", "/lang", "/opciones", "/pay", "/modify",
+                "/vaciarCarrito","/modCarrito",  "/start"];
 
 let idx = 0, keysLen = keys.length;
+
 for (; idx < keysLen ; idx++) {
     BUTTONS[keys[idx]] = { label: labels[idx], command: commands[idx] };
 }
