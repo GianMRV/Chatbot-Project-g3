@@ -7,7 +7,30 @@ let client = await connectDB()
 const colUsers = client.db().collection('users');
 let mensaje = await msg;
 let datos = mensaje.split(',');
+const colProductos = client.db().collection('productos')
+let data = {};
+// Obtener array de productos
+for (let index = 0; index < datos.length; index++) {
+    let producto = await colProductos.find({id: datos[index]})
+    
+}
+}
+/*
+let perfil = await colUsers.find({id: id, carro: {$exists: false}}).toArray();
 
+if (perfil === []) {
+    await colUsers.updateOne({id: id}, {$set: {carro: {
+        
+    }}});
+    
+} else {
+    
+}
+
+return log(perfil)
+}
+*/ 
+/*
 try {
      await colUsers.insertOne({
         carrito:{
@@ -21,5 +44,5 @@ try {
 }
 
 }
-
+*/
 module.exports = guardarDatos;

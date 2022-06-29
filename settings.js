@@ -6,11 +6,6 @@ const translate = require('translate-google');
 let connectDB = require('./functions/connectDB/connectDB');
 
 
-// ENDPOINTS
-
-const ENDPOINT = 'https://fakestoreapi.com/products/category/electronics';
-const ENDPOINT_ALT = 'https://api.escuelajs.co/api/v1/categories/2/products?offset=10&limit=20';
-
 // INITIAL LANGUAGE
 
 let lang = 'es';
@@ -21,16 +16,16 @@ let BUTTONS = {};
 
 let keys = ["products", "carrito", "info", "buscar", "close", 
             "registrar", "buscarOtro", "verCarrito", "language", "opciones", "pago", "modify",
-            "deleteCarrito", "modCarrito", "switch"];
+            "deleteCarrito", "modCarrito","añadirCarrito", "switch"];
 
 let labels = ["Lista de productos", "Carrito de Compra", "Sobre nosotros", "Elegir producto", "Volver al menu inicial",
               "Crear usuario", "Elegir otro producto", "Ver Carrito de Compra", "Cambiar idioma", "Configuraciones", "Métodos de Pago", "Modificar Correo Asociado",
-               "Vaciar Carrito", "Modificar Carrito","/restart"];
+               "Vaciar Carrito", "Modificar Carrito", "Añadir al Carrito", "/restart"];
               
 
 let commands = ["/products", "/carrito", "/info", "/buscar", "/start",
                 "/registrar", "/buscar", "/verCarrito", "/lang", "/opciones", "/pay", "/modify",
-                "/vaciarCarrito","/modCarrito",  "/start"];
+                "/vaciarCarrito","/modCarrito", "/addToCart",  "/start"];
 
 let idx = 0, keysLen = keys.length;
 
@@ -41,7 +36,7 @@ for (; idx < keysLen ; idx++) {
 // BOT SETTINGS
 
 const bot = new Telebot({
-    token: '5573269354:AAGYsm48IfrPZal9EnhfMJ6qiM2hMVnPcLI',
+    token: '5573269354:AAG0Z4nfZAvq-g41dtHavn0yDsTg5DYTtcM',
     usePlugins: ['namedButtons', 'askUser'],
     pluginConfig: {
         namedButtons: {
@@ -50,5 +45,40 @@ const bot = new Telebot({
     }
 });
 
-module.exports = { axios, translate, Telebot, bot, ENDPOINT, lang, 
-                   BUTTONS, keys, labels, commands, ENDPOINT_ALT, connectDB};
+
+// Instancia Axios para la base de datos
+const API_DATABASE = axios.create({
+    baseURL: 'http://localhost:8888',
+    timeout: 2500,
+  });
+
+
+
+//  ENDPOINTS
+const ENDPOINT_DATABASE = {
+
+    connectDB:"/connectDB",
+    findUser:"/findUser",
+    createUser:"/createUser",
+    getProducts:"/getProducts",
+    adminDB:"/adminDB",
+    deleteCart:"/putCart",
+    showCart:"/showCart",
+    addToCart:"/addToCart"
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports = { axios, translate, Telebot, bot, lang, 
+                   BUTTONS, keys, labels, commands,  connectDB, API_DATABASE, ENDPOINT_DATABASE};

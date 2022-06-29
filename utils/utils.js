@@ -1,7 +1,7 @@
 // DEPENDENCIES
 
 const { translate, bot } = require('../settings');
-let { lang, keys, labels, BUTTONS } = require('../settings');
+let {  keys, labels, BUTTONS } = require('../settings');
 
 // BOT LANGUAGE
 
@@ -62,4 +62,4 @@ let output = content => ({
 
 
 
-module.exports = { translateMessage, translateBtn, log, output };
+module.exports = { translateMessage, translateBtn, log , output};

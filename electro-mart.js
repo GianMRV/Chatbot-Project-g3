@@ -1,42 +1,45 @@
 //  DEPENDENCIES
-
-
-const { axios, translate, bot, ENDPOINT_ALT, ENDPOINT } = require("./settings");
+const { bot, API_DATABASE, ENDPOINT_DATABASE } = require("./settings");
 let { lang, BUTTONS } = require("./settings");
 let { translateMessage, translateBtn, log } = require("./utils/utils");
-let getCollection = require("./functions/getProductos/getProductos");
-const guardarDatos = require("./functions/usuarios/registrar");
-const encontrarUsuario = require("./functions/usuarios/encontrar");
+
 // START MENU
 
 bot.on('/start', (msg) => {
 
+    async function registro() {
+        try { await API_DATABASE.post(ENDPOINT_DATABASE.createUser + `?id=${msg.from.id}`) }
+        catch (Error) { console.log(Error) }
+    }
+
+
 
     async function verificando() {
 
-        let verificador = await encontrarUsuario(msg.from.id);
+        try {
 
-        console.log(verificador);
+            let call = await API_DATABASE.get(ENDPOINT_DATABASE.findUser + `?id=${msg.from.id}`)
+            let verificador = call.data;
 
-        if (verificador == 0) {
-            let replyMarkup = bot.keyboard([[BUTTONS.registrar.label]]);
-            return translateMessage(msg, lang, ' Bienvenido al bot! Favor registrate presionando en el botón y siguiendo los pasos indicados:', replyMarkup);
 
-        } else {
+            if (verificador == 0) {
+                registro();
 
-            let userName = String(msg.chat.first_name);
-            let replyMarkup = bot.keyboard([
-                [BUTTONS.products.label, BUTTONS.carrito.label],
-                [BUTTONS.info.label, BUTTONS.opciones.label]
-            ], { resize: true });
+            } else {
 
-            let text = `¡Es hora de empezar 🤖!\n\n¿Cómo puedo ayudarte?`
+                let userName = String(msg.chat.first_name);
+                let replyMarkup = bot.keyboard([
+                    [BUTTONS.products.label, BUTTONS.carrito.label],
+                    [BUTTONS.info.label, BUTTONS.opciones.label]
+                ], { resize: true });
 
-            return translateMessage(msg, lang, text, replyMarkup);
+                let text = `¡Es hora de empezar 🤖!\n\n¿Cómo puedo ayudarte?`
 
-        }
+                return translateMessage(msg, lang, text, replyMarkup);
 
-        
+            }
+
+        } catch (Error) { console.log(Error) };
     }
 
     verificando();
@@ -51,23 +54,26 @@ bot.on('/products', (msg) => {
 
     async function getProducts() {
         try {
-            let producto = await getCollection('Productos', {});
+
+            let call = await API_DATABASE.get("http://localhost:8888/adminDB")
+            let producto = call.data;
             let resultado = `id  |  Nombre                           |  Precio\n`;
             let len = producto.length;
             for (let i = 0; i < len; i++) {
                 resultado += `${producto[i].id}  | ${producto[i].name.substring(0, 20)} | $${producto[i].price} \n`;
             }
+
             return bot.sendMessage(msg.chat.id, ` ${resultado}`);
 
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
     getProducts();
     let replyMarkup = bot.keyboard([[BUTTONS.close.label, BUTTONS.buscar.label]], { resize: true });
 
-    return translateMessage(msg, lang, 'Elige tu opción favorita', replyMarkup);
+    translateMessage(msg, lang, 'Elige tu opción favorita', replyMarkup);
 });
 
 //  SEARCH PRODUCT
@@ -93,8 +99,9 @@ bot.on('ask.id', msg => {
 
     async function getProductID(id) {
 
+        let call = await API_DATABASE.get(ENDPOINT_DATABASE.getProducts + `?id=${id}`)
+        let producto = call.data;
 
-        const producto = await getCollection('Productos', { id: id });
         let resultado = `id: ${producto[0].id}\n Nombre: ${producto[0].name}\n 
         Precio: $${producto[0].price} \n Descripcion: \n ${producto[0].description} \n ${producto[0].image} \n
         Categoria: ${producto[0].category}\n
@@ -172,15 +179,60 @@ bot.on('/opciones', (msg) => {
 
 });
 
-bot.on('/registrar', (msg) => {
 
-    translateMessage(msg, lang, `Para registrarse ingrese los datos necesarios en el siguiente orden \n
-    correo, nombre, apellido, ciudad`, false, 'datos');
+bot.on('/addToCart', (msg) => {
+
+    translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod')
 
 
-})
+});
 
-bot.on('ask.datos', msg => {
+bot.on('ask.prod', (msg) => {
+
+    let replyMarkup = bot.keyboard([[BUTTONS.switch.label]], { resize: true });
+    let datos = msg.text.split(',');
+    let datosLen = datos.length;
+
+    if (datosLen % 2 != 0) { return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }
+    else {
+
+        //se llama a la api
+    }
+    let verifyData = datos.map(el => Number(el));
+
+
+    if (verifyData.includes(NaN)) { return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }
+    else {
+
+        let i=0;
+        for(;i<datosLen;i+2){if(datos[i]<=0 && datos[i]>20){return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }  }
+    }
+
+
+    async function addItems() { 
+
+        return API_DATABASE.put(ENDPOINT_DATABASE.addToCart+ `?id=${msg.from.id}` + `?msg=${msg}` )
+
+    }
+
+    addItems();
+});
+
+
+/*bot.on('/registrar', (msg) => {
+
+    async function registro() {
+        try {await API_DATABASE.post(ENDPOINT_DATABASE.createUser + `?id=${msg.from.id}`) }
+        catch (Error) { console.log(Error)}
+    }
+
+    registro();
+
+    let replyMarkup = bot.keyboard([[BUTTONS.close.label]]);
+    return translateMessage(msg, lang, 'Usuario creado satisfactoriamente', replyMarkup)
+})*/
+
+/*bot.on('ask.datos', msg => {
     let replyMarkup = bot.keyboard([[BUTTONS.switch.label]], { resize: true });
     
     const datos = String(msg.text);
@@ -188,6 +240,7 @@ bot.on('ask.datos', msg => {
     guardarDatos(datos, msg.from.id);
     return translateMessage(msg, lang, 'Sus datos han sido registrados correctamente', replyMarkup)
 })
+*/
 
 bot.on('/carrito', (msg) => {
 
@@ -200,7 +253,24 @@ bot.on('/carrito', (msg) => {
 
 })
 
+bot.on('/verCarrito', (msg) => {
 
+    let replyMarkup = bot.keyboard([[BUTTONS.carrito.label]], { resize: true });
+    registro();
+    translateMessage(msg, lang, 'Carrito de compras actual:', replyMarkup)
+
+    async function registro() {
+        try {
+
+            let call = await API_DATABASE.get(ENDPOINT_DATABASE.showCart + `?id=${msg.from.id}`)
+            let resultado = call.data;
+
+            return bot.sendMessage(msg.from.id, `${resultado}`);
+        }
+        catch (Error) { console.log(Error) }
+    }
+
+})
 
 
 // START POLLING UPDATES

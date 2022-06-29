@@ -13,7 +13,7 @@ let {
 } = event;
 
 let client = await connectDB()
-const colProductos = client.db().collection('Productos');
+const colProductos = client.db().collection('productos');
 
  
 const respuesta = await axios.get(ENDPOINT);
@@ -24,7 +24,7 @@ if (method == "POST") {
 
         for (let i = 0;i<20;i++) {
             await colProductos.insertOne({
-                id: productos[i].id, 
+                id: String(productos[i].id), 
                 name: productos[i].title,
                 price: productos[i].price,
                 description: productos[i].description,
