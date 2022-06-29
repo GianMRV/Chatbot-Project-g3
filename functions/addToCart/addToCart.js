@@ -20,7 +20,8 @@ exports.handler = async (event) => {
          let {id} = p;
          
          let mensaje = msg;
-         let datos = mensaje.split(',');
+         let verifyData = mensaje.split(',');
+         let datos = verifyData.map(el => Number(el));
          let user = await colUsers.find({ id }).toArray();
          let carrito = user[0].carrito;
          let i = 0;
@@ -28,12 +29,13 @@ exports.handler = async (event) => {
          
 
          //carrito[valorpar].cantidad:valorimpar
-         for (; i < datos.length; i+2) {
+         while(i<datos.length){
             carrito[datos[i] - 1].cantidad +=  datos[i + 1];
+            i+=2;
          }
          
-         //await colUsers.updateOne({ id: String(p.id)},{$set: {carrito:carrito}} )
-         return output(carrito[4].cantidad)  
+        await colUsers.updateOne({ id: String(p.id)},{$set: {carrito:carrito}} )
+        return output('hola');
          
       } catch (error) {
          log(error);

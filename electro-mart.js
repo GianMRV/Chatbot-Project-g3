@@ -188,34 +188,37 @@ bot.on('/addToCart', (msg) => {
 });
 
 bot.on('ask.prod', (msg) => {
-
+    
     let replyMarkup = bot.keyboard([[BUTTONS.switch.label]], { resize: true });
     let datos = msg.text.split(',');
     let datosLen = datos.length;
-
+    
     if (datosLen % 2 != 0) { return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }
     else {
-
+        
         //se llama a la api
     }
     let verifyData = datos.map(el => Number(el));
-
-
+    
+    
     if (verifyData.includes(NaN)) { return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }
     else {
-
+        
         let i=0;
         for(;i<datosLen;i+2){if(datos[i]<=0 && datos[i]>20){return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }  }
     }
-
-
+    
+    
+    
     async function addItems() { 
-
-        return API_DATABASE.put(ENDPOINT_DATABASE.addToCart+ `?id=${msg.from.id}` + `?msg=${msg}` )
+        
+        return API_DATABASE.put(ENDPOINT_DATABASE.addToCart+ `?id=${msg.from.id}` + `?msg=${msg.text}` )
 
     }
 
-    addItems();
+    return addItems();
+    
+
 });
 
 
