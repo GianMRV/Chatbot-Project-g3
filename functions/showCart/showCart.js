@@ -22,6 +22,7 @@ exports.handler = async (event) => {
 
     if (method == "GET") {
         try {
+            let flag=0;
             let { id } = p;
             let user = await colUsers.find({ id }).toArray();
             let carrito = user[0].carrito;
@@ -29,12 +30,14 @@ exports.handler = async (event) => {
 
             for (let index = 0; index < 20; index++) {
                 if (carrito[index].cantidad > 0) {
+                    flag=1;
                     resultado += `Id: ${carrito[index].id} \n Nombre: ${carrito[index].name} \n Precio: ${carrito[index].price} \n Cantidad: ${carrito[index].cantidad} \n 
                     ----------------------- \n`;
                 }
             }
 
-            return output(resultado);
+            if(flag==1){return output(resultado);} else { return output ('No se han añadido productos al carrito')}
+            
         } catch (error) {
             log(error);
         }
