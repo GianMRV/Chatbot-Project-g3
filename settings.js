@@ -20,12 +20,12 @@ let keys = ["products", "carrito", "info", "buscar", "close",
 
 let labels = ["Lista de productos", "Carrito de Compra", "Sobre nosotros", "Elegir producto", "Volver al menu inicial",
               "Crear usuario", "Elegir otro producto", "Ver Carrito de Compra", "Cambiar idioma", "Configuraciones", "Métodos de Pago", "Modificar Correo Asociado",
-               "Vaciar Carrito", "Modificar Carrito", "Añadir al Carrito", "/restart"];
+               "Vaciar Carrito", "Modificar Carrito", "Añadir Productos al Carrito", "/restart"];
               
 
 let commands = ["/products", "/carrito", "/info", "/buscar", "/start",
                 "/registrar", "/buscar", "/verCarrito", "/lang", "/opciones", "/pay", "/modify",
-                "/vaciarCarrito","/modCarrito", "/addToCart",  "/start"];
+                "/vaciarCarrito","/modCart", "/addToCart",  "/start"];
 
 let idx = 0, keysLen = keys.length;
 
@@ -65,7 +65,8 @@ const ENDPOINT_DATABASE = {
     deleteCart:"/putCart",
     showCart:"/showCart",
     addToCart:"/addToCart",
-    putCart:"/putCart"
+    putCart:"/putCart",
+    modCart:"/modCart"
 
 }
 

@@ -25,7 +25,7 @@ exports.handler = async (event) => {
       }
 
          try { await colUsers.updateOne({ id: String(p.id)},{$set: {carrito:carrito}} )
-         return output(carrito);
+         return output('Carrito vaciado satisfactoriamente');
          }catch (error) {log(error);}
           
 

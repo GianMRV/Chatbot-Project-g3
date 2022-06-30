@@ -71,7 +71,11 @@ bot.on('/products', (msg) => {
     }
 
     getProducts();
-    let replyMarkup = bot.keyboard([[BUTTONS.close.label, BUTTONS.buscar.label]], { resize: true });
+    let replyMarkup = bot.keyboard([
+        [BUTTONS.products.label, BUTTONS.buscar.label],
+        [BUTTONS.verCarrito.label, BUTTONS.añadirCarrito.label],
+        [BUTTONS.close.label]
+    ], { resize: true });
 
     translateMessage(msg, lang, 'Elige tu opción favorita', replyMarkup);
 });
@@ -111,14 +115,8 @@ bot.on('ask.id', msg => {
     }
 
     getProductID(id)
-    let replyMarkup = bot.keyboard([
-        [BUTTONS.buscarOtro.label],
-        [BUTTONS.carrito.label],
-        [BUTTONS.close.label]
-    ], {
-        resize: true
-    });
-    return translateMessage(msg, lang, 'Aqui se encuentra el producto solicitado', replyMarkup);
+
+    return translateMessage(msg, lang, 'Aqui se encuentra el producto solicitado');
 
 
 
@@ -182,23 +180,28 @@ bot.on('/opciones', (msg) => {
 
 bot.on('/addToCart', (msg) => {
 
-    translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod')
+    translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2 \n ESTO VA A SUMAR A LO QUE YA ESTABA, LUCETE', false, 'prod')
+
+
+});
+
+
+bot.on('/modCart', (msg) => {
+
+    translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2 \n ESTO VA A SUSTITUIR NO A AÑADIR, LUCETE SEBAS', false, 'mod')
 
 
 });
 
 bot.on('ask.prod', (msg) => {
-    
-    let replyMarkup = bot.keyboard([[BUTTONS.switch.label]], { resize: true });
+
+
     let datos = msg.text.split(',');
     let datosLen = datos.length;
     if (datosLen % 2 != 0) { return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }
-
     let verifyData = datos.map(el => Number(el));
 
-
     if (verifyData.includes(NaN)) { return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }
-   
 
     let i = 0;
     while (i < datosLen) {
@@ -207,22 +210,43 @@ bot.on('ask.prod', (msg) => {
         }
         i += 2;
     }
-    
-
-
 
     async function addItems() {
-        try {
-            
-            await API_DATABASE.put(ENDPOINT_DATABASE.addToCart + `?id=${msg.from.id}&msg=${msg.text}`);
-        } catch (error) {
-            console.log(error);
-        }
-
+        try {await API_DATABASE.put(ENDPOINT_DATABASE.addToCart + `?id=${msg.from.id}&msg=${msg.text}`);} 
+        catch (error) {console.log(error);}
     }
-    
+
     addItems();
-    return translateMessage(msg, lang, 'Productos añadidos satisfactoriamente', replyMarkup);
+    return translateMessage(msg, lang, 'Productos añadidos satisfactoriamente');
+
+
+});
+
+
+bot.on('ask.mod', (msg) => {
+
+    let datos = msg.text.split(',');
+    let datosLen = datos.length;
+    if (datosLen % 2 != 0) { return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }
+    let verifyData = datos.map(el => Number(el));
+
+    if (verifyData.includes(NaN)) { return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod') }
+
+    let i = 0;
+    while (i < datosLen) {
+        if (verifyData[i] <= 0 || verifyData[i] > 20) {
+            return translateMessage(msg, lang, 'Favor Ingresa los productos de la siguiente manera: \n id_producto, cantidad_de_id_producto: 1,2', false, 'prod')
+        }
+        i += 2;
+    }
+
+    async function addItems() {
+        try {await API_DATABASE.put(ENDPOINT_DATABASE.modCart + `?id=${msg.from.id}&msg=${msg.text}`);} 
+        catch (error) {console.log(error);}
+    }
+
+    addItems();
+    return translateMessage(msg, lang, 'Carrito modificado satisfactoriamente');
 
 
 });
@@ -264,9 +288,9 @@ bot.on('/carrito', (msg) => {
 
 bot.on('/verCarrito', (msg) => {
 
-    let replyMarkup = bot.keyboard([[BUTTONS.carrito.label]], { resize: true });
+
     registro();
-    translateMessage(msg, lang, 'Carrito de compras actual:', replyMarkup)
+    translateMessage(msg, lang, 'Carrito de compras actual:')
 
     async function registro() {
         try {
@@ -281,7 +305,24 @@ bot.on('/verCarrito', (msg) => {
 
 })
 
+bot.on('/vaciarCarrito', (msg) => {
 
+
+    vaciar();
+
+
+    async function vaciar() {
+        try {
+
+            await API_DATABASE.put(ENDPOINT_DATABASE.putCart + `?id=${msg.from.id}`)
+
+
+            return translateMessage(msg, lang, 'Carrito Vaciado Satisfactoriamente');
+        }
+        catch (Error) { console.log(Error) }
+    }
+
+})
 // START POLLING UPDATES
 
 bot.start(); // also bot.connect()
