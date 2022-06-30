@@ -3,6 +3,7 @@
 
 <!-- HEADER -->
 
+<br />
 <div align="center">
   
   <img src="img/ic-electro-mart.png" alt="Bot Icon" width="100" height="85">
