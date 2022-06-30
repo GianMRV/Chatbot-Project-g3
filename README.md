@@ -3,11 +3,10 @@
 
 <!-- HEADER -->
 
-<br />
 <div align="center">
   
-  <img src="img/ic-electro-mart.png" alt="Bot Icon" width="80" height="80">
-
+  <img src="img/ic-electro-mart.png" alt="Bot Icon" width="100" height="85">
+  
   <h1 align="center"> ElectroMart Bot </h1>
   
   <p align="center"> Proyecto de ChatBot para tienda virtual de productos electrónicos 💻 🚀 </p>
