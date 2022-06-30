@@ -49,7 +49,7 @@ const bot = new Telebot({
 // Instancia Axios para la base de datos
 const API_DATABASE = axios.create({
     baseURL: 'http://localhost:8888',
-    timeout: 2500,
+    timeout: 10000,
   });
 
 
@@ -64,7 +64,8 @@ const ENDPOINT_DATABASE = {
     adminDB:"/adminDB",
     deleteCart:"/putCart",
     showCart:"/showCart",
-    addToCart:"/addToCart"
+    addToCart:"/addToCart",
+    putCart:"/putCart"
 
 }
 
