@@ -1,5 +1,6 @@
 let { log, output } = require('../../utils/utils');
 let connectDB = require('../connectDB/connectDB');
+const { API_DATABASE, ENDPOINT_DATABASE } = require("../../settings");
 
 
 exports.handler = async (event) => {
@@ -15,8 +16,18 @@ exports.handler = async (event) => {
   
 
    if (method == "PUT") {
-         try { await colUsers.updateOne({ id: String(p.id)},{$set: {carrito:[]}} )}catch (error) {log(error);}
-         return output('Carro')  
+
+      let carrito = []
+      let call = await API_DATABASE.get(ENDPOINT_DATABASE.adminDB)
+      let producto=call.data;
+      for (let index = 0; index < 20; index++) {
+          carrito[index] = {id: producto[index].id, name: producto[index].name , cantidad: 0, price: producto[index].price};
+      }
+
+         try { await colUsers.updateOne({ id: String(p.id)},{$set: {carrito:carrito}} )
+         return output(carrito);
+         }catch (error) {log(error);}
+          
 
       } 
 
