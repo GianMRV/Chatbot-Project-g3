@@ -328,9 +328,19 @@ bot.on('/verCarrito', (msg) => {
 
 bot.on('/factura', (msg) => {
 
+    async function correo() {
+        try {
+
+            let call = await API_DATABASE.post(ENDPOINT_DATABASE.sendMail + `?id=${msg.from.id}`)
+            let resultado = call.data;
+          
+            translateMessage(msg,lang, resultado);
+
+        }
+        catch (Error) { console.log(Error) }
+    }
    
-   
-   
+   correo();
 
 // Send message with keyboard markup
     

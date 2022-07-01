@@ -19,59 +19,57 @@ exports.handler = async (event) => {
     if (method == "POST") {
         try {
 
+
             let { id } = p;
             let user = await colUsers.find({ id }).toArray();
-            let call = await API_DATABASE.post(ENDPOINT_DATABASE.createTicket + `?id=${id}`)
-            let ticket = call.data;
-            
+           // let call = await API_DATABASE.post(ENDPOINT_DATABASE.createTicket + `?id=${id}`)
+          //  let ticket = call.data;
+            let carrito = user[0].carrito;
+            let flag=0;
+            let resultado = ` ■ ELECTRO-MART  \n ■ FACTURA \n\n  •Cliente: ${user[0].nombre} ${user[0].apellidos} \n •Correo: ${user[0].correo} \n •Ciudad: ${user[0].ciudad} \n\n\n ■ Carrito de compras\n\n `
+            let precioTotal=0;
 
-            
-
-            
-            async function main() {
-               
-                
-                let testAccount = await nodemailer.createTestAccount();
-
-                // create reusable transporter object using the default SMTP transport
-                let transporter = nodeMailer.createTransport({
-                    host: "smtp.ethereal.email",
-                    port: 587,
-                    secure: false, // true for 465, false for other ports
-                    auth: {
-                        user: testAccount.user, // generated ethereal user
-                        pass: testAccount.pass, // generated ethereal password
-                    },
-                });
-
-                // send mail with defined transport object
-                let info = await transporter.sendMail({
-                    from: testAccount.user, // sender address
-                    to: user.correo, // list of receivers
-                    subject: "Hello ✔", // Subject line
-                    text: ticket  // plain text body
-                   
-                });
-
-                console.log("Message sent: %s", info.messageId);
-                // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-                // Preview only available when sending through an Ethereal account
-                console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-                // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+            for (let index = 0; index < 20; index++) {
+                if (carrito[index].cantidad > 0) {
+                    flag=1;
+                    precioTotal+=carrito[index].price*carrito[index].cantidad;
+                    resultado += `■ Id: ${carrito[index].id} \n ■ Nombre: ${carrito[index].name} \n ■ Precio: ${carrito[index].price} \n ■Cantidad: ${carrito[index].cantidad} \n 
+                    ------------------------------------------------------------- \n`;
+                }
             }
 
-            main().catch(console.error);
+            resultado+=`\n Precio Total = ${precioTotal}`
 
 
 
 
-            return output('ola')
+            // create reusable transporter object using the default SMTP transport
+            var transporter = nodeMailer.createTransport({
+                service:'gmail',
+                auth: {
+                  user: "electromartBOT@gmail.com",
+                  pass: "wvnluhjimrxaijzs"
+                }
+              });
 
-        } catch (error) {
-            log(error);
+            // send mail with defined transport object
+             await transporter.sendMail({
+                from: 'electromartbot@gmail.com', // sender address
+                to: user[0].correo, // list of receivers
+                subject: "FACTURA ENVIADA", // Subject line
+                text: resultado  // plain text body
+
+            });
+
+            
+
+            if(flag==1){return output('Factura enviada satisfactoriamente');} else { return output ('No se han añadido productos al carrito')}
+
         }
 
-    }
+     catch (error) {log(error);}
 
 }
+
+}
+

@@ -68,7 +68,8 @@ const ENDPOINT_DATABASE = {
     putCart:"/putCart",
     modCart:"/modCart",
     userData:"/userData",
-    createTicket:"/createTicket"
+    createTicket:"/createTicket",
+    sendMail:"/sendMail"
 
 }
 
