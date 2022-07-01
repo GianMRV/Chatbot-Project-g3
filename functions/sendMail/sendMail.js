@@ -61,9 +61,10 @@ exports.handler = async (event) => {
 
             });
 
-            
+            await API_DATABASE.put(ENDPOINT_DATABASE.putCart + `?id=${id}`)
 
-            if(flag==1){return output('Factura enviada satisfactoriamente');} else { return output ('No se han añadido productos al carrito')}
+
+            if(flag==1){return output('Factura enviada satisfactoriamente, carrito vaciado satisfactoriamente');} else { return output ('No se han añadido productos al carrito')}
 
         }
 
