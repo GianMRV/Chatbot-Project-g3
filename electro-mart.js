@@ -262,7 +262,7 @@ bot.on('/registrar', (msg) => {
 
 bot.on('ask.datos', msg => {
     
-    let replyMarkup = bot.keyboard([[BUTTONS.close.label]], { resize: true });
+    let replyMarkup = bot.keyboard([[BUTTONS.carrito.label]], { resize: true });
 
     async function revisa() {
 
