@@ -2,8 +2,8 @@
 
 const { translate, bot } = require('../settings');
 let {  yup, keys, labels, BUTTONS } = require('../settings');
-
-// BOT LANGUAGE
+let ciudad=["maracaibo", "Maracaibo", "caracas", "Caracas", "valencia", "Valencia", "Maracay", "maracay"]
+let metodos=["Crypto", "crypto", "Transferencia", "transferencia", "efectivo", "Efectivo"]
 
 function translateMessage (msg, lang, text, replyMarkup, id) {
    
@@ -70,10 +70,10 @@ async function verifica_datos(lang,msg, datos) {
     const num = '0123456789';
     const symbols = '`~!@#$%^&*()_+{}|:"<>?-=[];,./';
     let val = [];
-    
+    let datosLen=datos.length;
 
-
-    for (let i = 0; i < datos.length; i++){
+    let i = 0
+    for (; i < datosLen; i++){
         if(i == 0){            // Para verificar el correo
             let mail = datos[i];
             let isValid = await schema.isValid({ mail });
@@ -113,26 +113,28 @@ async function verifica_datos(lang,msg, datos) {
         }
         else if(i==3){                       // Para verificar la ciudad
             let city = datos[i];
-            for (let j in city){
-                if (num.includes(city[j]) || symbols.includes(city[j])){
+            
+                if (ciudad.includes(city)){
+                    val.push(1);
+                
+                }
+                else{
                     val.push(0);
                     translateMessage(msg,lang, `Campo 'ciudad' invalido`);
                 }
-                else{
-                    val.push(1);
-                }
-            }
-        } else {
+            
+        } else {        //Para verificar el método de pago
+
             let pago = datos[i];
-            for (let j in pago){
-                if (num.includes(pago[j]) || symbols.includes(pago[j])){
-                    val.push(0);
-                    translateMessage(msg,lang, `Campo 'Método de Pago' invalido`);
+            
+                if (metodos.includes(pago)){
+                    val.push(1);
+                
                 }
                 else{
-                    val.push(1);
+                    val.push(0);
+                    translateMessage(msg,lang, `Campo 'Método de pago' invalido`);
                 }
-            }
         }
     }
 

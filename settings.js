@@ -18,7 +18,7 @@ let keys = ["products", "carrito", "info", "buscar", "close",
             "registrar", "factura", "verCarrito", "language", "opciones", "pago", "modify",
             "enviar","deleteCarrito", "modCarrito","añadirCarrito", "switch"];
 
-let labels = ["Lista de productos", "Carrito de Compra", "Sobre nosotros", "Elegir producto", "Volver al menu inicial",
+let labels = ["Lista de productos", "Carrito de Compra", "Info Tienda", "Elegir producto", "Volver al menu inicial",
               "Crear usuario", "Crear Factura", "Ver Carrito de Compra", "Cambiar idioma", "Configuraciones", "Métodos de Pago", "Modificar Correo Asociado",
                "Enviar Factura", "Vaciar Carrito", "Modificar Carrito", "Añadir Productos al Carrito", "/restart"];
               

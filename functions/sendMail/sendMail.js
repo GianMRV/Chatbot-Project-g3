@@ -38,7 +38,7 @@ exports.handler = async (event) => {
                 }
             }
 
-            resultado+=`\n Método de Pago:${user[0].pago} \n Precio Total = ${precioTotal}`
+            resultado+=`\n Precio Total = ${precioTotal}`
 
 
 

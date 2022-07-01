@@ -66,7 +66,7 @@ bot.on('/products', (msg) => {
             return bot.sendMessage(msg.chat.id, ` ${resultado}`);
 
         } catch (error) {
-            // console.log(error);
+            console.log(error);
         }
     }
 
@@ -130,17 +130,30 @@ bot.on('ask.id', msg => {
 // DELIVERY METHODS
 
 bot.on('/info', (msg) => {
-    console.log('pepe')
+    
     //SE ENVIA UN STICKER QUE DIGA MÉTODOS DE PAGO
-    translateMessage(msg, lang, `Los metodos de pago son: \n
-    - Efectivo 
-
-    - Transferencia 
-
-    - Criptomonedas recibidas:
+    translateMessage(msg, lang, `
+    ■ MÉTODOS DE PAGO \n
+    • Efectivo 
+    • Transferencia 
+    • Crypto:
         *BTC
         *ETH
-        *USTD`);
+        *USTD
+        
+    ■ Zonas de Entrega \n
+    • Maracaibo 
+    • Caracas 
+    • Valencia
+    • Maracay
+     
+        
+         `
+
+
+
+
+    );
 
 
 
@@ -152,7 +165,7 @@ bot.on('/lang', (msg) => {
 
     // use SWITCH for more languages
     lang == "es" ? lang = "en" : lang = "es";
-    console.log(lang);
+    
     translateBtn(lang); // to end
 
     let replyMarkup = bot.keyboard([[BUTTONS.switch.label]], { resize: true });
@@ -256,7 +269,19 @@ bot.on('ask.mod', (msg) => {
 bot.on('/registrar', (msg) => {
 
 
-    return translateMessage(msg, lang, 'NO INGRESAR NADA HASTA HABER LLENADO SATISFACTORIAMENTE, PORFAVOR\nFavor Ingrese los datos de la siguiente manera:\n correo@correo.com,nombre,apellido,ciudad,metodo de pago \n MÉTODOS DE PAGO DISPONIBLES: Efectivo, Transferencia, Crypto', false, 'datos')
+    return translateMessage(msg, lang, `NO PRESIONAR NINGÚN BOTÓN HASTA HABER LLENADO SATISFACTORIAMENTE, PORFAVOR\n\n Favor Ingrese los datos de la siguiente manera:\n correo@correo.com,nombre,apellido,ciudad,metodo de pago \n\n\n ■ MÉTODOS DE PAGO \n
+    • Efectivo 
+    • Transferencia 
+    • Crypto:
+        *BTC
+        *ETH
+        *USTD
+        
+    ■ Zonas de Entrega \n
+    • Maracaibo 
+    • Caracas 
+    • Valencia
+    • Maracay`, false, 'datos')
 
 })
 
@@ -346,21 +371,21 @@ bot.on('/factura', (msg) => {
     let replyMarkup = bot.keyboard([[BUTTONS.registrar.label]], { resize: true });
     translateMessage(msg, lang, 'Presione el botón y siga los pasos indicados: ', replyMarkup);
 
-    
+
 
 })
 
-bot.on('/enviarFactura', (msg) => { 
+bot.on('/enviarFactura', (msg) => {
 
-    async function enviar(){
+    async function enviar() {
         try {
 
-        let call = await API_DATABASE.post(ENDPOINT_DATABASE.sendMail + `?id=${msg.from.id}`)
-        let resultado = call.data;
-        translateMessage(msg, lang, resultado);
-            } catch(error){log(error)}
+            let call = await API_DATABASE.post(ENDPOINT_DATABASE.sendMail + `?id=${msg.from.id}`)
+            let resultado = call.data;
+            translateMessage(msg, lang, resultado);
+        } catch (error) { log(error) }
     }
-    
+
     enviar();
 
 })
