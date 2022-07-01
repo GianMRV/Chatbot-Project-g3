@@ -1,27 +1,34 @@
 let {log, output} = require('../../utils/utils');
 let connectDB = require('../connectDB/connectDB');
-let bot = require("../../settings")
-
-
-async function guardarDatos(msg){
-    let client = await connectDB()
-const colUsers = client.db().collection('users');
-let mensaje = await msg;
-let datos = mensaje.split(',');
 
 
 
-try {
-     await colUsers.insertOne({
-        correo: datos[0],
-        nombre: datos[1] + ' ' + datos[2],
-        ciudad: datos[3]
-    })
-    
-} catch (error){
-    log (error);
+exports.handler = async (event) => {
+
+   let {
+      httpMethod: method,
+      queryStringParameters: p
+   } = event;
+
+   
+   let client = await connectDB()
+   const colUsers = client.db().collection('users');
+   
+   if (method == "PUT") {
+       
+       let {id} =p;
+       let {msg} = p;
+       let datos=msg.split(',');
+       
+
+      try {
+          
+        await colUsers.updateOne({ id: String(p.id)},{$set: {correo:datos[0], nombre:datos[1], apellidos:datos[2], ciudad:datos[3]    }    } )
+        return output('works');
+         
+
+      } catch (error) {log(error);}
+   }
 }
 
-}
 
-module.exports = guardarDatos;
