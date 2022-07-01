@@ -273,9 +273,7 @@ bot.on('/registrar', (msg) => {
     • Efectivo 
     • Transferencia 
     • Crypto:
-        *BTC
-        *ETH
-        *USTD
+    
         
     ■ Zonas de Entrega \n
     • Maracaibo 
