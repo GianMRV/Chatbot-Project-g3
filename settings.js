@@ -18,9 +18,9 @@ let keys = ["products", "carrito", "info", "buscar", "close",
             "registrar", "factura", "verCarrito", "language", "opciones", "pago", "modify",
             "enviar","deleteCarrito", "modCarrito","añadirCarrito", "switch"];
 
-let labels = ["Lista de productos", "Carrito de Compra", "Info Tienda", "Elegir producto", "Volver al menu inicial",
-              "Crear usuario", "Crear Factura", "Ver Carrito de Compra", "Cambiar idioma", "Configuraciones", "Métodos de Pago", "Modificar Correo Asociado",
-               "Enviar Factura", "Vaciar Carrito", "Modificar Carrito", "Añadir Productos al Carrito", "/restart"];
+let labels = ["🛍️ Lista de productos", "🛒 Carrito de Compra", "📃 Info Tienda", "🆔 Elegir producto", "🔙 Volver al menu inicial",
+              "🔑 Crear usuario", "📝 Crear Factura", "👁️‍🗨️ Ver Carrito de Compra", "🔤 Cambiar idioma", "⚙️ Configuraciones", "💳 Métodos de Pago", "📧 Modificar Correo Asociado",
+               "📤 Enviar Factura", "Vaciar Carrito", "🔧🛒 Modificar Carrito", "➕ Añadir Productos al Carrito", "/restart"];
               
 
 let commands = ["/products", "/carrito", "/info", "/buscar", "/start",
@@ -36,7 +36,8 @@ for (; idx < keysLen ; idx++) {
 // BOT SETTINGS
 
 const bot = new Telebot({
-    token: '5573269354:AAG0Z4nfZAvq-g41dtHavn0yDsTg5DYTtcM',
+    //token: '5573269354:AAG0Z4nfZAvq-g41dtHavn0yDsTg5DYTtcM',
+    token: "5572572962:AAHpok_IIAkzpA86yCLLkugizo9QnOivtl0",
     usePlugins: ['namedButtons', 'askUser', 'commandButton'],
     pluginConfig: {
         namedButtons: {

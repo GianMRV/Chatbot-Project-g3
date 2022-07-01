@@ -33,7 +33,7 @@ bot.on('/start', (msg) => {
                     [BUTTONS.info.label, BUTTONS.opciones.label]
                 ], { resize: true });
 
-                let text = `¡Es hora de empezar 🤖!\n\n¿Cómo puedo ayudarte?`
+                let text = `Bienvenido , ${ msg.from.username }.\n\n¡Es hora de empezar 🤖!\n\n¿Cómo puedo ayudarte?`
 
                 return translateMessage(msg, lang, text, replyMarkup);
 
@@ -133,7 +133,7 @@ bot.on('/info', (msg) => {
     
     //SE ENVIA UN STICKER QUE DIGA MÉTODOS DE PAGO
     translateMessage(msg, lang, `
-    ■ MÉTODOS DE PAGO \n
+    ■ MÉTODOS DE PAGO 💸\n
     • Efectivo 
     • Transferencia 
     • Crypto:
@@ -141,7 +141,7 @@ bot.on('/info', (msg) => {
         *ETH
         *USTD
         
-    ■ Zonas de Entrega \n
+    ■ Zonas de Entrega 🗺️\n
     • Maracaibo 
     • Caracas 
     • Valencia
@@ -230,7 +230,7 @@ bot.on('ask.prod', (msg) => {
     }
 
     addItems();
-    return translateMessage(msg, lang, 'Productos añadidos satisfactoriamente');
+    return translateMessage(msg, lang, 'Productos añadidos satisfactoriamente ✅');
 
 
 });
@@ -260,7 +260,7 @@ bot.on('ask.mod', (msg) => {
     }
 
     addItems();
-    return translateMessage(msg, lang, 'Carrito modificado satisfactoriamente');
+    return translateMessage(msg, lang, 'Carrito modificado satisfactoriamente ✅');
 
 
 });
@@ -269,17 +269,21 @@ bot.on('ask.mod', (msg) => {
 bot.on('/registrar', (msg) => {
 
 
-    return translateMessage(msg, lang, `NO PRESIONAR NINGÚN BOTÓN HASTA HABER LLENADO SATISFACTORIAMENTE, PORFAVOR\n\n Favor Ingrese los datos de la siguiente manera:\n correo@correo.com,nombre,apellido,ciudad,metodo de pago \n\n\n ■ MÉTODOS DE PAGO \n
+    return translateMessage(msg, lang, `NO PRESIONAR NINGÚN BOTÓN HASTA HABER LLENADO SATISFACTORIAMENTE, PORFAVOR\n\n Favor Ingrese los datos de la siguiente manera:\n correo@correo.com,nombre,apellido,ciudad,metodo de pago \n\n\n
+    ■ MÉTODOS DE PAGO 💸\n
     • Efectivo 
     • Transferencia 
     • Crypto:
-    
+        *BTC
+        *ETH
+        *USTD
         
-    ■ Zonas de Entrega \n
+    ■ Zonas de Entrega 🗺️\n
     • Maracaibo 
     • Caracas 
     • Valencia
-    • Maracay`, false, 'datos')
+    • Maracay`,
+    false, 'datos')
 
 })
 
@@ -296,10 +300,10 @@ bot.on('ask.datos', msg => {
 
         let datos = msg.text.split(',');
         if (datos.length < 5) {
-            translateMessage(msg, lang, 'Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ', false, 'datos');
+            translateMessage(msg, lang, '😲 Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ', false, 'datos');
         }
         else if (datos.length > 5) {
-            translateMessage(msg, lang, 'Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ', false, 'datos');
+            translateMessage(msg, lang, '😲 Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ', false, 'datos');
         }
         else {
             let valida = await verifica_datos(lang, msg, datos);
@@ -308,7 +312,7 @@ bot.on('ask.datos', msg => {
                 try {
 
                     await API_DATABASE.put(ENDPOINT_DATABASE.userData + `?id=${msg.from.id}&msg=${msg.text}`)
-                    translateMessage(msg, lang, 'Sus datos han sido registrados satisfactoriamente', replyMarkup)
+                    translateMessage(msg, lang, 'Sus datos han sido registrados satisfactoriamente ✅', replyMarkup)
                     translateMessage(msg, lang, 'Presione el botón adjunto para enviar la factura', replyMarkupInline)
 
                 } catch (error) { log(error) }
@@ -317,7 +321,7 @@ bot.on('ask.datos', msg => {
             }
             else {
 
-                translateMessage(msg, lang, `Oops! Ha ocurrido un error.\nPor favor, ingresa tus datos:`, false, 'datos');
+                translateMessage(msg, lang, `😲 Oops! Ha ocurrido un error.\nPor favor, ingresa tus datos:`, false, 'datos');
 
             }
         }
@@ -385,7 +389,6 @@ bot.on('/enviarFactura', (msg) => {
     }
 
     enviar();
-
 })
 
 
