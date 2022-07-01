@@ -16,16 +16,16 @@ let BUTTONS = {};
 
 let keys = ["products", "carrito", "info", "buscar", "close", 
             "registrar", "factura", "verCarrito", "language", "opciones", "pago", "modify",
-            "deleteCarrito", "modCarrito","añadirCarrito", "switch"];
+            "enviar","deleteCarrito", "modCarrito","añadirCarrito", "switch"];
 
 let labels = ["Lista de productos", "Carrito de Compra", "Sobre nosotros", "Elegir producto", "Volver al menu inicial",
               "Crear usuario", "Crear Factura", "Ver Carrito de Compra", "Cambiar idioma", "Configuraciones", "Métodos de Pago", "Modificar Correo Asociado",
-               "Vaciar Carrito", "Modificar Carrito", "Añadir Productos al Carrito", "/restart"];
+               "Enviar Factura", "Vaciar Carrito", "Modificar Carrito", "Añadir Productos al Carrito", "/restart"];
               
 
 let commands = ["/products", "/carrito", "/info", "/buscar", "/start",
                 "/registrar", "/factura", "/verCarrito", "/lang", "/opciones", "/pay", "/modify",
-                "/vaciarCarrito","/modCart", "/addToCart",  "/start"];
+                "/enviarFactura","/vaciarCarrito","/modCart", "/addToCart",  "/start"];
 
 let idx = 0, keysLen = keys.length;
 

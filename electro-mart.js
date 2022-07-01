@@ -212,8 +212,8 @@ bot.on('ask.prod', (msg) => {
     }
 
     async function addItems() {
-        try {await API_DATABASE.put(ENDPOINT_DATABASE.addToCart + `?id=${msg.from.id}&msg=${msg.text}`);} 
-        catch (error) {console.log(error);}
+        try { await API_DATABASE.put(ENDPOINT_DATABASE.addToCart + `?id=${msg.from.id}&msg=${msg.text}`); }
+        catch (error) { console.log(error); }
     }
 
     addItems();
@@ -221,6 +221,7 @@ bot.on('ask.prod', (msg) => {
 
 
 });
+
 
 
 bot.on('ask.mod', (msg) => {
@@ -241,8 +242,8 @@ bot.on('ask.mod', (msg) => {
     }
 
     async function addItems() {
-        try {await API_DATABASE.put(ENDPOINT_DATABASE.modCart + `?id=${msg.from.id}&msg=${msg.text}`);} 
-        catch (error) {console.log(error);}
+        try { await API_DATABASE.put(ENDPOINT_DATABASE.modCart + `?id=${msg.from.id}&msg=${msg.text}`); }
+        catch (error) { console.log(error); }
     }
 
     addItems();
@@ -254,41 +255,53 @@ bot.on('ask.mod', (msg) => {
 
 bot.on('/registrar', (msg) => {
 
-    
-   return translateMessage(msg, lang, 'NO INGRESAR NADA HASTA HABER LLENADO SATISFACTORIAMENTE, PORFAVOR\nFavor Ingrese los datos de la siguiente manera:\n correo@correo.com, nombre, apellido,ciudad', false, 'datos')
+
+    return translateMessage(msg, lang, 'NO INGRESAR NADA HASTA HABER LLENADO SATISFACTORIAMENTE, PORFAVOR\nFavor Ingrese los datos de la siguiente manera:\n correo@correo.com,nombre,apellido,ciudad,metodo de pago \n MÉTODOS DE PAGO DISPONIBLES: Efectivo, Transferencia, Crypto', false, 'datos')
 
 })
 
 
 bot.on('ask.datos', msg => {
-    
-    let replyMarkup = bot.keyboard([[BUTTONS.carrito.label]], { resize: true });
+    let replyMarkup = bot.keyboard([
+        [BUTTONS.products.label, BUTTONS.buscar.label],
+        [BUTTONS.verCarrito.label, BUTTONS.añadirCarrito.label],
+        [BUTTONS.close.label]
+    ], { resize: true });
 
+    const replyMarkupInline = bot.inlineKeyboard([[bot.inlineButton('Enviar Factura', { callback: '/enviarFactura' })]]);
     async function revisa() {
 
         let datos = msg.text.split(',');
-        if (datos.length < 4){
-            translateMessage(msg,lang, 'Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ',false,'datos');
+        if (datos.length < 5) {
+            translateMessage(msg, lang, 'Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ', false, 'datos');
         }
-        else if(datos.length > 4){
-            translateMessage(msg,lang, 'Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ',false,'datos');
+        else if (datos.length > 5) {
+            translateMessage(msg, lang, 'Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ', false, 'datos');
         }
-        else{
-            let valida = await verifica_datos(lang,msg,datos);
+        else {
+            let valida = await verifica_datos(lang, msg, datos);
             if (valida) {
-                
-                try {await API_DATABASE.put(ENDPOINT_DATABASE.userData+`?id=${msg.from.id}&msg=${msg.text}`)} 
-                catch (error) {log(error)}
-                translateMessage(msg, lang, 'Sus datos han sido registrados correctamente', replyMarkup)
+
+                try {
+
+                    await API_DATABASE.put(ENDPOINT_DATABASE.userData + `?id=${msg.from.id}&msg=${msg.text}`)
+                    translateMessage(msg, lang, 'Sus datos han sido registrados satisfactoriamente', replyMarkup)
+                    translateMessage(msg, lang, 'Presione el botón adjunto para enviar la factura', replyMarkupInline)
+
+                } catch (error) { log(error) }
+
+
             }
             else {
 
-                translateMessage(msg,lang, `Oops! Ha ocurrido un error.\nPor favor, ingresa tus datos:`, false,'datos');
+                translateMessage(msg, lang, `Oops! Ha ocurrido un error.\nPor favor, ingresa tus datos:`, false, 'datos');
 
             }
         }
     }
     revisa();
+
+
 })
 
 
@@ -316,38 +329,41 @@ bot.on('/verCarrito', (msg) => {
             let call = await API_DATABASE.get(ENDPOINT_DATABASE.showCart + `?id=${msg.from.id}`)
             let resultado = call.data;
 
-            const replyMarkup = bot.inlineKeyboard([[bot.inlineButton('Crear Factura', {callback: '/factura'})]]);
-            return bot.sendMessage(msg.from.id, `${resultado}`, {replyMarkup} );
+            const replyMarkup = bot.inlineKeyboard([[bot.inlineButton('Crear Factura', { callback: '/factura' })]]);
+            return bot.sendMessage(msg.from.id, `${resultado}`, { replyMarkup });
 
         }
         catch (Error) { console.log(Error) }
     }
 
 })
+
 
 
 bot.on('/factura', (msg) => {
 
-    async function correo() {
-        try {
 
-            let call = await API_DATABASE.post(ENDPOINT_DATABASE.sendMail + `?id=${msg.from.id}`)
-            let resultado = call.data;
-          
-            translateMessage(msg,lang, resultado);
+    let replyMarkup = bot.keyboard([[BUTTONS.registrar.label]], { resize: true });
+    translateMessage(msg, lang, 'Presione el botón y siga los pasos indicados: ', replyMarkup);
 
-        }
-        catch (Error) { console.log(Error) }
-    }
-   
-   correo();
-
-// Send message with keyboard markup
     
 
 })
 
+bot.on('/enviarFactura', (msg) => { 
 
+    async function enviar(){
+        try {
+
+        let call = await API_DATABASE.post(ENDPOINT_DATABASE.sendMail + `?id=${msg.from.id}`)
+        let resultado = call.data;
+        translateMessage(msg, lang, resultado);
+            } catch(error){log(error)}
+    }
+    
+    enviar();
+
+})
 
 
 

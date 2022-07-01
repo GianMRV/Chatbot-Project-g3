@@ -26,7 +26,7 @@ exports.handler = async (event) => {
           //  let ticket = call.data;
             let carrito = user[0].carrito;
             let flag=0;
-            let resultado = ` ■ ELECTRO-MART  \n ■ FACTURA \n\n  •Cliente: ${user[0].nombre} ${user[0].apellidos} \n •Correo: ${user[0].correo} \n •Ciudad: ${user[0].ciudad} \n\n\n ■ Carrito de compras\n\n `
+            let resultado = ` ■ ELECTRO-MART  \n ■ FACTURA \n\n  •Cliente: ${user[0].nombre} ${user[0].apellidos} \n •Correo: ${user[0].correo} \n •Ciudad: ${user[0].ciudad} \n •Método de Pago: ${user[0].pago} \n\n\n ■ Carrito de compras\n\n `
             let precioTotal=0;
 
             for (let index = 0; index < 20; index++) {
@@ -38,7 +38,7 @@ exports.handler = async (event) => {
                 }
             }
 
-            resultado+=`\n Precio Total = ${precioTotal}`
+            resultado+=`\n Método de Pago:${user[0].pago} \n Precio Total = ${precioTotal}`
 
 
 
@@ -52,19 +52,19 @@ exports.handler = async (event) => {
                 }
               });
 
-            // send mail with defined transport object
-             await transporter.sendMail({
-                from: 'electromartbot@gmail.com', // sender address
-                to: user[0].correo, // list of receivers
-                subject: "FACTURA ENVIADA", // Subject line
-                text: resultado  // plain text body
-
-            });
+           
+             
 
             await API_DATABASE.put(ENDPOINT_DATABASE.putCart + `?id=${id}`)
 
 
-            if(flag==1){return output('Factura enviada satisfactoriamente, carrito vaciado satisfactoriamente');} else { return output ('No se han añadido productos al carrito')}
+            if(flag==1){await transporter.sendMail({
+                from: 'electromartbot@gmail.com', 
+                to: user[0].correo, 
+                subject: "FACTURA ENVIADA", 
+                text: resultado  
+            });
+                return output('Factura enviada satisfactoriamente, carrito vaciado satisfactoriamente');} else { return output ('No se han añadido productos al carrito')}
 
         }
 

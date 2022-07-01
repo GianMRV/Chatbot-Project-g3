@@ -111,7 +111,7 @@ async function verifica_datos(lang,msg, datos) {
                 }
             }
         }
-        else{                       // Para verificar la ciudad
+        else if(i==3){                       // Para verificar la ciudad
             let city = datos[i];
             for (let j in city){
                 if (num.includes(city[j]) || symbols.includes(city[j])){
@@ -122,8 +122,20 @@ async function verifica_datos(lang,msg, datos) {
                     val.push(1);
                 }
             }
+        } else {
+            let pago = datos[i];
+            for (let j in pago){
+                if (num.includes(pago[j]) || symbols.includes(pago[j])){
+                    val.push(0);
+                    translateMessage(msg,lang, `Campo 'Método de Pago' invalido`);
+                }
+                else{
+                    val.push(1);
+                }
+            }
         }
     }
+
     let isValid = true;
     if (val.includes(0)){
         isValid = false;

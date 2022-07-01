@@ -23,7 +23,7 @@ exports.handler = async (event) => {
 
       try {
           
-        await colUsers.updateOne({ id: String(p.id)},{$set: {correo:datos[0], nombre:datos[1], apellidos:datos[2], ciudad:datos[3]    }    } )
+        await colUsers.updateOne({ id: String(p.id)},{$set: {correo:datos[0], nombre:datos[1], apellidos:datos[2], ciudad:datos[3], pago:datos[4]    }    } )
         return output('works');
          
 
