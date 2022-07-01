@@ -1,7 +1,7 @@
 //  DEPENDENCIES
 const { bot, API_DATABASE, ENDPOINT_DATABASE } = require("./settings");
 let { lang, BUTTONS } = require("./settings");
-let { translateMessage, translateBtn, log } = require("./utils/utils");
+let { verifica_datos, translateMessage, translateBtn, log } = require("./utils/utils");
 
 // START MENU
 
@@ -130,7 +130,7 @@ bot.on('ask.id', msg => {
 // DELIVERY METHODS
 
 bot.on('/info', (msg) => {
-
+    console.log('pepe')
     //SE ENVIA UN STICKER QUE DIGA MÉTODOS DE PAGO
     translateMessage(msg, lang, `Los metodos de pago son: \n
     - Efectivo 
@@ -252,28 +252,46 @@ bot.on('ask.mod', (msg) => {
 });
 
 
-/*bot.on('/registrar', (msg) => {
+bot.on('/registrar', (msg) => {
 
-    async function registro() {
-        try {await API_DATABASE.post(ENDPOINT_DATABASE.createUser + `?id=${msg.from.id}`) }
-        catch (Error) { console.log(Error)}
-    }
-
-    registro();
-
-    let replyMarkup = bot.keyboard([[BUTTONS.close.label]]);
-    return translateMessage(msg, lang, 'Usuario creado satisfactoriamente', replyMarkup)
-})*/
-
-/*bot.on('ask.datos', msg => {
-    let replyMarkup = bot.keyboard([[BUTTONS.switch.label]], { resize: true });
     
-    const datos = String(msg.text);
-    //aqui iria un  yup
-    guardarDatos(datos, msg.from.id);
-    return translateMessage(msg, lang, 'Sus datos han sido registrados correctamente', replyMarkup)
+   return translateMessage(msg, lang, 'NO INGRESAR NADA HASTA HABER LLENADO SATISFACTORIAMENTE, PORFAVOR\nFavor Ingrese los datos de la siguiente manera:\n correo@correo.com, nombre, apellido,ciudad', false, 'datos')
+
 })
-*/
+
+
+bot.on('ask.datos', msg => {
+    
+    let replyMarkup = bot.keyboard([[BUTTONS.close.label]], { resize: true });
+
+    async function revisa() {
+
+        let datos = msg.text.split(',');
+        if (datos.length < 4){
+            translateMessage(msg,lang, 'Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ',false,'datos');
+        }
+        else if(datos.length > 4){
+            translateMessage(msg,lang, 'Oops!\nCampos invalidos. Por favor, intentalo nuevamente: ',false,'datos');
+        }
+        else{
+            let valida = await verifica_datos(lang,msg,datos);
+            if (valida) {
+                
+                try {await API_DATABASE.put(ENDPOINT_DATABASE.userData+`?id=${msg.from.id}&msg=${msg.text}`)} 
+                catch (error) {log(error)}
+                translateMessage(msg, lang, 'Sus datos han sido registrados correctamente', replyMarkup)
+            }
+            else {
+
+                translateMessage(msg,lang, `Oops! Ha ocurrido un error.\nPor favor, ingresa tus datos:`, false,'datos');
+
+            }
+        }
+    }
+    revisa();
+})
+
+
 
 bot.on('/carrito', (msg) => {
 
@@ -298,12 +316,31 @@ bot.on('/verCarrito', (msg) => {
             let call = await API_DATABASE.get(ENDPOINT_DATABASE.showCart + `?id=${msg.from.id}`)
             let resultado = call.data;
 
-            return bot.sendMessage(msg.from.id, `${resultado}`);
+            const replyMarkup = bot.inlineKeyboard([[bot.inlineButton('Crear Factura', {callback: '/factura'})]]);
+            return bot.sendMessage(msg.from.id, `${resultado}`, {replyMarkup} );
+
         }
         catch (Error) { console.log(Error) }
     }
 
 })
+
+
+bot.on('/factura', (msg) => {
+
+   
+   
+   
+
+// Send message with keyboard markup
+    
+
+})
+
+
+
+
+
 
 bot.on('/vaciarCarrito', (msg) => {
 

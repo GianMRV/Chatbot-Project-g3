@@ -9,7 +9,7 @@ exports.handler = async (event) => {
       queryStringParameters: p
    } = event;
 
-   let client = await connectDB()
+   let client = await connectDB();
    const colUsers = client.db().collection('users');
 
 
@@ -34,7 +34,7 @@ exports.handler = async (event) => {
             i+=2;
          }
          
-        await colUsers.updateOne({ id: String(p.id)},{$set: {carrito:carrito}} )
+        await colUsers.updateOne({ id: String(p.id)},{$set: {carrito:carrito}})
         return output(carrito);
          
       } catch (error) {
